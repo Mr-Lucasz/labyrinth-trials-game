@@ -1,9 +1,13 @@
+import Constants from '../utils/Constants';
 import { EventBus } from '../EventBus';
 import { Scene } from 'phaser';
 
 export class Game extends Scene {
     constructor() {
         super('Game');
+        this.gameState = Constants.GAME_STATES.JOGANDO;
+        this.model = {};
+        this.controller = {};
     }
 
     init(data) {
@@ -12,6 +16,11 @@ export class Game extends Scene {
         this.challengeMode = data?.challengeMode ?? false;
         // Carregar progresso se não for novo jogo
         // this.progress = ...
+    }
+
+    setGameState(newState) {
+        this.gameState = newState;
+        EventBus.emit('game-state-changed', newState);
     }
 
     create() {
@@ -40,6 +49,12 @@ export class Game extends Scene {
         });
         // Placeholder para integração do Guardião
         this.guardian = this.add.sprite(900, 700, 'guardian').setScale(0.7);
+
+        this.setGameState(Constants.GAME_STATES.JOGANDO);
+        // Exemplo de uso de Strategy Pattern para puzzles:
+        // this.currentPuzzle = new ShapePuzzle(this);
+        // this.currentPuzzle.setStrategy(new ShapePuzzleStrategy());
+        // this.currentPuzzle.setState(Constants.PUZZLE_STATES.ATIVO);
     }
 
     changeScene() {
