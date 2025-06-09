@@ -29,11 +29,30 @@ export class Preloader extends Scene
 
     preload ()
     {
-        //  Load the assets for the game - Replace with your own assets
         this.load.setPath('assets');
-
         this.load.image('logo', 'logo.png');
         this.load.image('star', 'star.png');
+        this.load.image('background', 'bg.png');
+
+        // Placeholders para assets organizados
+        this.load.setPath('assets/images/characters');
+        this.load.image('player', 'player.png');
+        this.load.image('guardian', 'guardian.png');
+
+        this.load.setPath('assets/images/environment');
+        this.load.image('tile', 'tile.png');
+
+        this.load.setPath('assets/images/puzzles');
+        this.load.image('shape1', 'shape1.png');
+        this.load.image('shape2', 'shape2.png');
+
+        this.load.setPath('assets/images/ui');
+        this.load.image('button', 'button.png');
+
+        this.load.setPath('assets/audio/sfx');
+        this.load.audio('click', 'click.wav');
+        this.load.audio('success', 'success.wav');
+        this.load.audio('error', 'error.wav');
     }
 
     create ()

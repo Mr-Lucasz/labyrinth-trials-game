@@ -1,72 +1,68 @@
 import { EventBus } from '../EventBus';
 import { Scene } from 'phaser';
+import SaveLoadManager from '../utils/SaveLoadManager';
 
-export class MainMenu extends Scene
-{
-    logoTween;
-
-    constructor ()
-    {
+export class MainMenu extends Scene {
+    constructor() {
         super('MainMenu');
     }
 
-    create ()
-    {
+    create() {
         this.add.image(512, 384, 'background');
-
-        this.logo = this.add.image(512, 300, 'logo').setDepth(100);
-
-        this.add.text(512, 460, 'Main Menu', {
-            fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
+        this.add.image(512, 220, 'logo').setDepth(100);
+        this.add.text(512, 120, 'Labirinto dos Desafios', {
+            fontFamily: 'Arial Black', fontSize: 48, color: '#ffe066',
             stroke: '#000000', strokeThickness: 8,
             align: 'center'
         }).setDepth(100).setOrigin(0.5);
-        
+
+        this.createMenuButton(512, 320, 'Novo Jogo', () => this.startNewGame());
+        this.createMenuButton(512, 380, 'Carregar Jogo', () => this.loadGame(), !SaveLoadManager.hasSave());
+        this.createMenuButton(512, 440, 'Ranking', () => this.showRanking());
+        this.createMenuButton(512, 500, 'Sobre', () => this.showCredits());
+        this.isChallengeMode = false;
+        this.createMenuButton(512, 560, 'Modo Desafio: OFF', () => this.toggleChallengeMode());
+
         EventBus.emit('current-scene-ready', this);
     }
 
-    changeScene ()
-    {
-        if (this.logoTween)
-        {
-            this.logoTween.stop();
-            this.logoTween = null;
-        }
-
-        this.scene.start('Game');
+    createMenuButton(x, y, label, callback, disabled = false) {
+        const btn = this.add.text(x, y, label, {
+            fontFamily: 'Arial', fontSize: 32, color: disabled ? '#888' : '#fff', backgroundColor: '#222', padding: { x: 20, y: 10 }
+        }).setOrigin(0.5).setInteractive({ useHandCursor: !disabled });
+        if (!disabled) btn.on('pointerdown', callback);
     }
 
-    moveLogo (reactCallback)
-    {
-        if (this.logoTween)
-        {
-            if (this.logoTween.isPlaying())
-            {
-                this.logoTween.pause();
+    toggleChallengeMode() {
+        this.isChallengeMode = !this.isChallengeMode;
+        // Atualiza texto do botão
+        this.children.getAll().forEach(child => {
+            if (child.text && child.text.startsWith('Modo Desafio')) {
+                child.setText('Modo Desafio: ' + (this.isChallengeMode ? 'ON' : 'OFF'));
             }
-            else
-            {
-                this.logoTween.play();
-            }
+        });
+    }
+
+    startNewGame() {
+        // Solicita apelido (pode ser aprimorado com input real via overlay React)
+        const nickname = prompt('Digite seu apelido:');
+        if (nickname) {
+            this.scene.start('Game', { nickname, newGame: true, challengeMode: this.isChallengeMode });
         }
-        else
-        {
-            this.logoTween = this.tweens.add({
-                targets: this.logo,
-                x: { value: 750, duration: 3000, ease: 'Back.easeInOut' },
-                y: { value: 80, duration: 1500, ease: 'Sine.easeOut' },
-                yoyo: true,
-                repeat: -1,
-                onUpdate: () => {
-                    if (reactCallback)
-                    {
-                        reactCallback({
-                            x: Math.floor(this.logo.x),
-                            y: Math.floor(this.logo.y)
-                        });
-                    }
-                }
-            });
+    }
+
+    loadGame() {
+        if (SaveLoadManager.hasSave()) {
+            const save = SaveLoadManager.loadGame();
+            this.scene.start('Game', { ...save, newGame: false });
         }
+    }
+
+    showRanking() {
+        this.scene.start('RankingScene');
+    }
+
+    showCredits() {
+        this.scene.start('CreditsScene');
     }
 }
