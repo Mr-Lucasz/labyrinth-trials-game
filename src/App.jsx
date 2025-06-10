@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { PhaserGame } from './PhaserGame';
 import NameOverlay from './components/NameOverlay';
-import { EventBus } from './components/game/EventBus';
+import { EventBus } from './game/EventBus';
 
 function App ()
 {
