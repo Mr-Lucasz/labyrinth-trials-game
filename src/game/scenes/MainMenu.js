@@ -9,6 +9,19 @@ export class MainMenu extends Scene {
 
     create() {
         this.add.image(512, 384, 'background');
+        // Cria animação da tocha apenas se ainda não existir
+        if (!this.anims.exists('torch_burning')) {
+            this.anims.create({
+                key: 'torch_burning',
+                frames: this.anims.generateFrameNumbers('torch', { start: 0, end: 3 }),
+                frameRate: 8,
+                repeat: -1
+            });
+        }
+        // Tochas animadas nas laterais
+        this.add.sprite(200, 384, 'torch').play('torch_burning').setScale(1.5);
+        this.add.sprite(824, 384, 'torch').play('torch_burning').setScale(1.5);
+
         this.add.image(512, 220, 'logo').setDepth(100);
         this.add.text(512, 120, 'Labirinto dos Desafios', {
             fontFamily: 'Arial Black', fontSize: 48, color: '#ffe066',

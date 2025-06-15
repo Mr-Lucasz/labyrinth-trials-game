@@ -1,4 +1,6 @@
 ```javascript
+// Arquivo obsoleto. Use src/game/scenes/Game.js
+
 class GameScene extends Phaser.Scene {
     constructor() {
         super({ key: 'GameScene' });

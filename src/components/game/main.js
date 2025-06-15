@@ -1,3 +1,8 @@
+// Este arquivo não deve mais ser usado. Use src/game/main.js para rodar o jogo principal.
+// Arquivo mantido apenas para referência histórica.
+
+// Para rodar o jogo, edite e utilize src/game/main.js.
+
 import { SplashScreen } from './scenes/SplashScreen';
 import Boot from './scenes/Boot';
 import Preloader from './scenes/Preloader';
