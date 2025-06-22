@@ -8,8 +8,13 @@ export class MainMenu extends Scene {
     }
 
     create() {
-        this.add.image(512, 384, 'background');
-        // Cria animação da tocha apenas se ainda não existir
+        // Fundo do menu
+        this.add.image(512, 384, 'background').setDepth(0);
+
+        // Logo centralizado (ajuste o nome do asset se necessário)
+        this.add.image(512, 180, 'logo').setScale(0.7).setDepth(1);
+
+        // Tochas animadas ao lado do logo
         if (!this.anims.exists('torch_burning')) {
             this.anims.create({
                 key: 'torch_burning',
@@ -18,32 +23,40 @@ export class MainMenu extends Scene {
                 repeat: -1
             });
         }
-        // Tochas animadas nas laterais
-        this.add.sprite(200, 384, 'torch').play('torch_burning').setScale(1.5);
-        this.add.sprite(824, 384, 'torch').play('torch_burning').setScale(1.5);
+        this.add.sprite(312, 180, 'torch').play('torch_burning').setScale(1.2).setDepth(1);
+        this.add.sprite(712, 180, 'torch').play('torch_burning').setScale(1.2).setDepth(1);
 
-        this.add.image(512, 220, 'logo').setDepth(100);
-        this.add.text(512, 120, 'Labirinto dos Desafios', {
+        // Título do jogo
+        this.add.text(512, 80, 'Labirinto dos Desafios', {
             fontFamily: 'Arial Black', fontSize: 48, color: '#ffe066',
             stroke: '#000000', strokeThickness: 8,
             align: 'center'
-        }).setDepth(100).setOrigin(0.5);
+        }).setDepth(2).setOrigin(0.5);
 
-        this.createMenuButton(512, 320, 'Novo Jogo', () => this.startNewGame());
-        this.createMenuButton(512, 380, 'Carregar Jogo', () => this.loadGame(), !SaveLoadManager.hasSave());
-        this.createMenuButton(512, 440, 'Ranking', () => this.showRanking());
-        this.createMenuButton(512, 500, 'Sobre', () => this.showCredits());
+        // Botões principais
+        this.createButton(512, 320, 'Novo Jogo', () => this.startNewGame());
+        this.createButton(512, 390, 'Carregar Jogo', () => this.loadGame(), !SaveLoadManager.hasSave());
+        this.createButton(512, 460, 'Ranking', () => this.showRanking());
+        this.createButton(512, 530, 'Sobre', () => this.showCredits());
         this.isChallengeMode = false;
-        this.createMenuButton(512, 560, 'Modo Desafio: OFF', () => this.toggleChallengeMode());
+        this.createButton(512, 600, 'Modo Desafio: OFF', () => this.toggleChallengeMode());
 
         EventBus.emit('current-scene-ready', this);
     }
 
-    createMenuButton(x, y, label, callback, disabled = false) {
-        const btn = this.add.text(x, y, label, {
-            fontFamily: 'Arial', fontSize: 32, color: disabled ? '#888' : '#fff', backgroundColor: '#222', padding: { x: 20, y: 10 }
-        }).setOrigin(0.5).setInteractive({ useHandCursor: !disabled });
-        if (!disabled) btn.on('pointerdown', callback);
+    createButton(x, y, text, callback, disabled = false) {
+        // Botão com imagem de fundo e texto centralizado
+        const btn = this.add.image(x, y, 'button_background').setInteractive({ useHandCursor: !disabled }).setScale(1.3).setDepth(1);
+        if (!disabled) {
+            btn.on('pointerover', () => btn.setTint(0xaaaaaa));
+            btn.on('pointerout', () => btn.clearTint());
+            btn.on('pointerdown', callback);
+        } else {
+            btn.setTint(0x444444);
+        }
+        this.add.text(x, y, text, {
+            fontFamily: 'Arial', fontSize: 32, color: disabled ? '#888' : '#fff', stroke: '#000', strokeThickness: 4
+        }).setOrigin(0.5).setDepth(2);
     }
 
     toggleChallengeMode() {

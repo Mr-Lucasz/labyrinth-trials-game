@@ -16,7 +16,7 @@ export class Preloader extends Scene {
         this.load.setPath("assets/images/characters");
 
         this.load.setPath("assets/images/environment");
-        this.load.spritesheet("torch", "torch.png", {
+        this.load.spritesheet("torch", "torch2.png", {
             frameWidth: 64,
             frameHeight: 64,
         });
@@ -35,8 +35,9 @@ export class Preloader extends Scene {
         // Tocha animada
         this.anims.create({
             key: 'fire',
+            //1 linha com 4 frames
             frames: this.anims.generateFrameNumbers('torch', { start: 0, end: 3 }),
-            frameRate: 6,
+            frameRate: 8,
             repeat: -1
         });
         let tocha = this.add.sprite(600, 200, 'torch').play('fire');
