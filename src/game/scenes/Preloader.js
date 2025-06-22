@@ -12,33 +12,22 @@ export class Preloader extends Scene {
 
     preload() {
         this.load.setPath('assets');
-        this.load.image('logo', 'logo.png');
-        this.load.image('star', 'star.png');
 
         this.load.setPath('assets/images/characters');
-        this.load.image('player', 'player.png');
-        this.load.image('guardian', 'guardian.png');
 
         this.load.setPath('assets/images/environment');
-        this.load.image('tile', 'tile.png');
-        // Carrega a tocha corretamente como spritesheet
         this.load.spritesheet('torch', 'torch.png', {
             frameWidth: 64,
             frameHeight: 64
         });
 
         this.load.setPath('assets/images/puzzles');
-        this.load.image('shape1', 'shape1.png');
-        this.load.image('shape2', 'shape2.png');
+
 
         this.load.setPath('assets/images/ui');
-        this.load.image('button', 'button.png');
-        this.load.image('background_wall', 'background_wall.jpg');
+
 
         this.load.setPath('assets/audio/sfx');
-        this.load.audio('click', 'click.wav');
-        this.load.audio('success', 'success.wav');
-        this.load.audio('error', 'error.wav');
     }
 
     create() {
