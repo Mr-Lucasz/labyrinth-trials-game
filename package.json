@@ -24,10 +24,12 @@
         "dev": "node log.js dev & vite --config vite/config.dev.mjs",
         "build": "node log.js build & vite build --config vite/config.prod.mjs",
         "dev-nolog": "vite --config vite/config.dev.mjs",
-        "build-nolog": "vite build --config vite/config.prod.mjs"
+        "build-nolog": "vite build --config vite/config.prod.mjs",
+        "build:tilesets": "phaser3-autotile -i ./src/assets/raw/*.png -o ./public/assets/images/tilesets/ -t ./src/tiled/tilesets/"
     },
     "dependencies": {
         "phaser": "^3.90.0",
+        "phaser3-autotile": "^0.2.5",
         "react": "^19.0.0",
         "react-dom": "^19.0.0"
     },
@@ -40,7 +42,7 @@
         "eslint-plugin-react-hooks": "^5.2.0",
         "eslint-plugin-react-refresh": "^0.4.19",
         "globals": "^16.0.0",
-        "vite": "^6.3.1",
-        "terser": "5.39.0"
+        "terser": "5.39.0",
+        "vite": "^6.3.1"
     }
 }
