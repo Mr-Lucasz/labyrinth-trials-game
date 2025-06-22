@@ -10,7 +10,7 @@ export class Boot extends Scene
     preload ()
     {
         // Carrega apenas o fundo para o Preloader
-        this.load.image('background', 'assets/images/ui/background_wall.jpg');
+
     }
 
     create ()
