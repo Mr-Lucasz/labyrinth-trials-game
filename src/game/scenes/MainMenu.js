@@ -45,12 +45,19 @@ export class MainMenu extends Scene {
     }
 
     createButton(x, y, text, callback, disabled = false) {
-        // Botão com imagem de fundo e texto centralizado
-        const btn = this.add.image(x, y, 'button_background').setInteractive({ useHandCursor: !disabled }).setScale(1.3).setDepth(1);
+        // Botão como sprite usando spritesheet (3 frames: 0-normal, 1-hover, 2-clicado)
+        const btn = this.add.sprite(x, y, 'button_spritesheet', 0)
+            .setInteractive({ useHandCursor: !disabled })
+            .setScale(1.3)
+            .setDepth(1);
         if (!disabled) {
-            btn.on('pointerover', () => btn.setTint(0xaaaaaa));
-            btn.on('pointerout', () => btn.clearTint());
-            btn.on('pointerdown', callback);
+            btn.on('pointerover', () => btn.setFrame(1));
+            btn.on('pointerout', () => btn.setFrame(0));
+            btn.on('pointerdown', () => btn.setFrame(2));
+            btn.on('pointerup', () => {
+                btn.setFrame(1);
+                callback();
+            });
         } else {
             btn.setTint(0x444444);
         }

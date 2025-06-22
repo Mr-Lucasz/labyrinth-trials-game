@@ -26,6 +26,7 @@ export class Preloader extends Scene {
         this.load.setPath("assets/images/puzzles");
 
         this.load.setPath("assets/images/ui");
+        this.load.spritesheet("button_spritesheet", "button.png", { frameWidth: 200, frameHeight: 60, endFrame: 2 });
 
         this.load.setPath("assets/audio/sfx");
     }
