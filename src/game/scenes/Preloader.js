@@ -16,7 +16,7 @@ export class Preloader extends Scene {
         this.load.setPath("assets/images/characters");
 
         this.load.setPath("assets/images/environment");
-        this.load.spritesheet("torch", "torch2.png", {
+        this.load.spritesheet("torch", "torch.png", {
             frameWidth: 64,
             frameHeight: 64,
         });
@@ -26,26 +26,46 @@ export class Preloader extends Scene {
         this.load.setPath("assets/images/puzzles");
 
         this.load.setPath("assets/images/ui");
-        this.load.spritesheet("button_spritesheet", "button.png", { frameWidth: 200, frameHeight: 60, endFrame: 2 });
+        this.load.spritesheet("button_spritesheet", "button1.png", {
+            frameWidth: 512,
+            frameHeight: 113,
+            endFrame: 2,
+        });
 
         this.load.setPath("assets/audio/sfx");
+
+        this.load.on("filecomplete", (key, type, data) => {
+            console.log(
+                `[PRELOADER] Arquivo carregado com sucesso: ${key} (${type})`
+            );
+        });
+        this.load.on("loaderror", (file) => {
+            console.error(
+                `[PRELOADER] ERRO ao carregar arquivo: ${file.key}, URL: ${file.url}`
+            );
+        });
     }
 
     create() {
         // Cria animação da tocha após o preload
         // Tocha animada
         this.anims.create({
-            key: 'fire',
+            key: "fire",
             //1 linha com 4 frames
-            frames: this.anims.generateFrameNumbers('torch', { start: 0, end: 3 }),
+            frames: this.anims.generateFrameNumbers("torch", {
+                start: 0,
+                end: 3,
+            }),
             frameRate: 8,
-            repeat: -1
+            repeat: -1,
         });
-        let tocha = this.add.sprite(600, 200, 'torch').play('fire');
+        let tocha = this.add.sprite(600, 200, "torch").play("fire");
 
         // Tochas animadas nas laterais
-        this.add.sprite(200, 384, 'torch').play('fire').setScale(1.5);
-        this.add.sprite(824, 384, 'torch').play('fire').setScale(1.5);
+        this.add.sprite(200, 384, "torch").play("fire").setScale(1.5);
+        this.add.sprite(824, 384, "torch").play("fire").setScale(1.5);
+
+        //add botão no background
 
         // Destroi barra e outline ao sair do Preloader
         this.children.getByName("progressBar")?.destroy();

@@ -11,21 +11,6 @@ export class MainMenu extends Scene {
         // Fundo do menu
         this.add.image(512, 384, 'background').setDepth(0);
 
-        // Logo centralizado (ajuste o nome do asset se necessário)
-        this.add.image(512, 180, 'logo').setScale(0.7).setDepth(1);
-
-        // Tochas animadas ao lado do logo
-        if (!this.anims.exists('torch_burning')) {
-            this.anims.create({
-                key: 'torch_burning',
-                frames: this.anims.generateFrameNumbers('torch', { start: 0, end: 3 }),
-                frameRate: 8,
-                repeat: -1
-            });
-        }
-        this.add.sprite(312, 180, 'torch').play('torch_burning').setScale(1.2).setDepth(1);
-        this.add.sprite(712, 180, 'torch').play('torch_burning').setScale(1.2).setDepth(1);
-
         // Título do jogo
         this.add.text(512, 80, 'Labirinto dos Desafios', {
             fontFamily: 'Arial Black', fontSize: 48, color: '#ffe066',
@@ -33,54 +18,80 @@ export class MainMenu extends Scene {
             align: 'center'
         }).setDepth(2).setOrigin(0.5);
 
-        // Botões principais
-        this.createButton(512, 320, 'Novo Jogo', () => this.startNewGame());
-        this.createButton(512, 390, 'Carregar Jogo', () => this.loadGame(), !SaveLoadManager.hasSave());
-        this.createButton(512, 460, 'Ranking', () => this.showRanking());
-        this.createButton(512, 530, 'Sobre', () => this.showCredits());
-        this.isChallengeMode = false;
-        this.createButton(512, 600, 'Modo Desafio: OFF', () => this.toggleChallengeMode());
+        // Alinhar tochas ao lado do botão "Novo Jogo"
+        const buttonY = 320; // Y do botão "Novo Jogo"
+        const buttonXs = 512;
+        const torchLeftX = 155;
+        const torchRightX = 860;
+        // Tocha esquerda
+        this.add.sprite(torchLeftX, buttonY, 'torch').play('fire').setScale(2.5).setDepth(20);
+        // Tocha direita
+        this.add.sprite(torchRightX, buttonY, 'torch').play('fire').setScale(2.5).setDepth(20);
+
+        // Botões principais (alinhados verticalmente, centralizados entre as tochas)
+        this.createButton(buttonXs, 320, 'Novo Jogo', () => this.startNewGame());
+        this.createButton(buttonXs, 430, 'Carregar Jogo', () => this.loadGame(), !SaveLoadManager.hasSave());
+        this.createButton(buttonXs, 540, 'Ranking', () => this.showRanking());
+        this.createButton(buttonXs, 650, 'Sobre', () => this.showCredits());
 
         EventBus.emit('current-scene-ready', this);
     }
 
     createButton(x, y, text, callback, disabled = false) {
-        // Botão como sprite usando spritesheet (3 frames: 0-normal, 1-hover, 2-clicado)
+        const scale = 1; // ajuste aqui
+
+        // Sprite visual do botão
         const btn = this.add.sprite(x, y, 'button_spritesheet', 0)
-            .setInteractive({ useHandCursor: !disabled })
-            .setScale(1.3)
-            .setDepth(1);
+            .setScale(scale)
+            .setDepth(20)
+            .setOrigin(0.5)
+            .setInteractive({ useHandCursor: true });
+
         if (!disabled) {
-            btn.on('pointerover', () => btn.setFrame(1));
-            btn.on('pointerout', () => btn.setFrame(0));
-            btn.on('pointerdown', () => btn.setFrame(2));
+            let isPointerDown = false;
+            let isPointerOver = false;
+
+            btn.on('pointerover', () => {
+                isPointerOver = true;
+                if (!isPointerDown) btn.setFrame(1);
+            });
+            btn.on('pointerout', () => {
+                isPointerOver = false;
+                isPointerDown = false;
+                btn.setFrame(0);
+            });
+            btn.on('pointerdown', () => {
+                isPointerDown = true;
+                btn.setFrame(2);
+            });
             btn.on('pointerup', () => {
-                btn.setFrame(1);
-                callback();
+                if (isPointerOver) {
+                    btn.setFrame(1);
+                    callback();
+                } else {
+                    btn.setFrame(0);
+                }
+                isPointerDown = false;
             });
         } else {
             btn.setTint(0x444444);
         }
-        this.add.text(x, y, text, {
-            fontFamily: 'Arial', fontSize: 32, color: disabled ? '#888' : '#fff', stroke: '#000', strokeThickness: 4
-        }).setOrigin(0.5).setDepth(2);
-    }
 
-    toggleChallengeMode() {
-        this.isChallengeMode = !this.isChallengeMode;
-        // Atualiza texto do botão
-        this.children.getAll().forEach(child => {
-            if (child.text && child.text.startsWith('Modo Desafio')) {
-                child.setText('Modo Desafio: ' + (this.isChallengeMode ? 'ON' : 'OFF'));
-            }
-        });
+        // Texto do botão
+        this.add.text(x, y, text, {
+            fontFamily: 'Arial',
+            fontSize: 32,
+            color: disabled ? '#888' : '#fff',
+            stroke: '#000',
+            strokeThickness: 4
+        }).setOrigin(0.5).setDepth(22);
     }
 
     startNewGame() {
         // Solicita apelido (pode ser aprimorado com input real via overlay React)
         const nickname = prompt('Digite seu apelido:');
         if (nickname) {
-            this.scene.start('Game', { nickname, newGame: true, challengeMode: this.isChallengeMode });
+            this.scene.start('Game', { nickname, newGame: true });
         }
     }
 
