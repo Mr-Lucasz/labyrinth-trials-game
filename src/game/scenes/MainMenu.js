@@ -18,6 +18,13 @@ export class MainMenu extends Scene {
             align: 'center'
         }).setDepth(2).setOrigin(0.5);
 
+        // Adiciona o personagem actor com novo spritesheet (1 coluna, 4 linhas, 512x314)
+        const actor = this.add.sprite(150, 680, 'actor')
+            .setOrigin(0.5, 1)
+            .setDepth(20)
+            .setScale(1.2)
+            .play('walk');
+
         // Alinhar tochas ao lado do botão "Novo Jogo"
         const buttonY = 320; // Y do botão "Novo Jogo"
         const buttonXs = 512;
@@ -33,12 +40,6 @@ export class MainMenu extends Scene {
         this.createButton(buttonXs, 430, 'Carregar Jogo', () => this.loadGame(), !SaveLoadManager.hasSave());
         this.createButton(buttonXs, 540, 'Ranking', () => this.showRanking());
         this.createButton(buttonXs, 650, 'Sobre', () => this.showCredits());
-
-        // Adiciona o personagem actor igual ao protótipo
-        const actor = this.add.sprite(150, 680, 'actor')
-            .setOrigin(0.5, 1)
-            .setScale(4)
-            .play('idle');
 
         EventBus.emit('current-scene-ready', this);
     }

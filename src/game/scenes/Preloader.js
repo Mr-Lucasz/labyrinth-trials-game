@@ -13,10 +13,11 @@ export class Preloader extends Scene {
     preload() {
         this.load.setPath("assets");
 
+        // Ajuste: spritesheet do actor agora é 1 coluna, 4 linhas, 512x314
         this.load.setPath("assets/images/characters");
         this.load.spritesheet("actor", "actor_position_spritesheets.png", {
-            frameWidth: 28, // largura exata de cada frame
-            frameHeight: 36, // altura exata de cada frame
+            frameWidth: 512, // largura exata de cada frame
+            frameHeight: 314, // altura exata de cada frame
             endFrame: 3, // 4 frames, 0 a 3
         });
 
@@ -70,7 +71,13 @@ export class Preloader extends Scene {
         this.add.sprite(200, 384, "torch").play("fire").setScale(1.5);
         this.add.sprite(824, 384, "torch").play("fire").setScale(1.5);
 
-        //add botão no background
+        // Animação do ator (1 coluna, 4 linhas)
+        this.anims.create({
+            key: "walk",
+            frames: this.anims.generateFrameNumbers("actor", { start: 0, end: 3 }),
+            frameRate: 8,
+            repeat: -1,
+        });
 
         // Destroi barra e outline ao sair do Preloader
         this.children.getByName("progressBar")?.destroy();
@@ -81,12 +88,5 @@ export class Preloader extends Scene {
 
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
         this.scene.start("MainMenu");
-
-        this.anims.create({
-            key: "idle",
-            frames: [{ key: "actor", frame: 0 }],
-            frameRate: 1,
-            repeat: -1,
-        });
     }
 }
