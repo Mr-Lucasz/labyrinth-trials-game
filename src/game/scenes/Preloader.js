@@ -14,6 +14,11 @@ export class Preloader extends Scene {
         this.load.setPath("assets");
 
         this.load.setPath("assets/images/characters");
+        this.load.spritesheet("actor", "actor_position_spritesheets.png", {
+            frameWidth: 28, // largura exata de cada frame
+            frameHeight: 36, // altura exata de cada frame
+            endFrame: 3, // 4 frames, 0 a 3
+        });
 
         this.load.setPath("assets/images/environment");
         this.load.spritesheet("torch", "torch.png", {
@@ -76,5 +81,12 @@ export class Preloader extends Scene {
 
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
         this.scene.start("MainMenu");
+
+        this.anims.create({
+            key: "idle",
+            frames: [{ key: "actor", frame: 0 }],
+            frameRate: 1,
+            repeat: -1,
+        });
     }
 }

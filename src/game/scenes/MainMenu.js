@@ -34,6 +34,12 @@ export class MainMenu extends Scene {
         this.createButton(buttonXs, 540, 'Ranking', () => this.showRanking());
         this.createButton(buttonXs, 650, 'Sobre', () => this.showCredits());
 
+        // Adiciona o personagem actor igual ao protótipo
+        const actor = this.add.sprite(150, 680, 'actor')
+            .setOrigin(0.5, 1)
+            .setScale(4)
+            .play('idle');
+
         EventBus.emit('current-scene-ready', this);
     }
 
